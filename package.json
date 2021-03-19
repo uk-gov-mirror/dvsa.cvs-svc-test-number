@@ -16,12 +16,12 @@
     "test": "jest --testMatch=\"**/*.unitTest.ts\"",
     "test-i": "BRANCH=local jest --testMatch=\"**/*.intTest.ts\" --runInBand",
     "tslint": "tslint src/**/*.ts tests/**/*.ts",
-    "prepush": "BRANCH=local npm test && npm run tslint",
+    "prepush": "npm run tslint && BRANCH=local npm run coverage",
     "package": "mkdir ${ZIP_NAME} && cp package.json package-lock.json ${ZIP_NAME} && cp -r .build/src/* ${ZIP_NAME}/ && cd ${ZIP_NAME} && npm ci --production && rm package.json package-lock.json && zip -qr ../${ZIP_NAME}.zip .",
     "predeploy": "npm install && npm run prepush",
     "security-checks": "git secrets --scan && git log -p | scanrepo",
     "sonar-scanner": "npm run tslint && npm run coverage && sonar-scanner",
-    "coverage": "BRANCH=local jest --testMatch=\"**/*.*Test.ts\" --coverage --runInBand",
+    "coverage": "BRANCH=local jest --testMatch=\"**/*.unitTest.ts\" --coverage --runInBand",
     "audit:filter": "npm audit --json | node_modules/.bin/audit-filter --nsp-config=.nsprc --audit=-",
     "audit-dep": "npm audit",
     "tools-setup": "sls dynamodb migrate && BRANCH=local node_modules/gulp/bin/gulp.js start-serverless && sls dynamodb seed --seed=test-number"
@@ -100,7 +100,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prepush && npm run security-checks",
+      "pre-commit": "npm run build && npm run security-checks",
       "pre-push": "npm run prepush"
     }
   }
