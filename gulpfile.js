@@ -4,6 +4,7 @@ const process = require("process");
 
 gulp.task("start-serverless", function (done) {
   const instance = exec("serverless offline start &");
+  console.log(`\n${instance.pid} pid running...\n\n`);
 
   instance.stdout.on("data", function (output) {
     process.stdout.write(output);
